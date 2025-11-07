@@ -1,30 +1,23 @@
-//SPDX-License-Identifier: MIT 
-
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+contract Bank{
 
-contract bank{
+    mapping(address => uint256) balances;
 
-    mapping(address => uint) public balances;
-
-    function deposit() public payable{
-        balances[msg.sender] += msg.value; 
+    function DepositMoney(uint256 amount)public {
+        require(amount>=0 , "Amount should greater than 0");
+        balances[msg.sender]=balances[msg.sender]+amount;
     }
+
     
-    function withdraw(uint _amount) public{
-
-        require(balances[msg.sender]>= _amount, "Not enough ether");
-
-        balances[msg.sender] -= _amount*1000000000000000000;
-
-        (bool sent,) = msg.sender.call{value: _amount*1000000000000000000}("Sent");
-        require(sent, "failed to send ETH");
-
-        
+    function WithdrawlMoney(uint256 amount)public {
+        require(amount<=balances[msg.sender] , "Insuffient balance");
+        balances[msg.sender]=balances[msg.sender]-amount;
     }
 
-    function getBal() public view returns(uint){
-        return address(this).balance/1000000000000000000;
+    function Showbalance() public view returns (uint256){
+        return balances[msg.sender];
     }
-
 }
+
